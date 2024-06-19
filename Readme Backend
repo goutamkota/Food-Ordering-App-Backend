@@ -1,0 +1,8 @@
+//  Backend :
+    npx tsc --init
+    yarn add express cors dotenv mongodb mongoose
+    yarn add ts-node typescript nodemon @types/express @types/cors @types/node -D
+    yarn add express-oauth2-jwt-bearer
+    yarn add jsonwebtoken
+    yarn add express-validator
+    yarn add @types/jsonwebtoken -D
