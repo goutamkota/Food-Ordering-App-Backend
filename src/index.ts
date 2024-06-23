@@ -2,8 +2,9 @@ import express, { Express, Request } from "express";
 import cors from "cors";
 import "dotenv/config";
 import mongoose from "mongoose";
-import myUserRoute from "./routes/MyUserRoute";
-import myRestaurantRoute from "./routes/MyRestaurantRoute";
+import MyUserRoute from "./routes/MyUserRoute";
+import MyRestaurantRoute from "./routes/MyRestaurantRoute";
+import RestaurantRoute from "./routes/RestaurantRoute";
 import { v2 as cloudinary } from "cloudinary"
 
 mongoose
@@ -32,8 +33,10 @@ app.get("/health", async (req : Request, res : express.Response) => {
     res.send({ message : "Health Status is OK" });
 })
 
-app.use('/api/my/user', myUserRoute)
-app.use('/api/my/restaurant', myRestaurantRoute)
+// Redirect to route
+app.use('/api/my/user', MyUserRoute)
+app.use('/api/my/restaurant', MyRestaurantRoute)
+app.use('/api/restaurant', RestaurantRoute)
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server is running on port ${PORT}.`));

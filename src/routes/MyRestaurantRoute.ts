@@ -16,6 +16,7 @@ const upload = multer(
     }
 );
 
+// Redirect to controller
 router.get(
     "/",
     jwtCheck,
