@@ -1,19 +1,24 @@
 //  Backend :
     npx tsc --init
     yarn add express cors dotenv mongodb mongoose
-    yarn add ts-node typescript nodemon @types/express @types/cors @types/node -D
+    yarn add ts-node typescript nodemon
     yarn add express-oauth2-jwt-bearer
     yarn add jsonwebtoken
     yarn add express-validator
-    yarn add @types/jsonwebtoken -D
     yarn add express-oauth2-jwt-bearer
     yarn add express-validator
     yarn add cloudinary
     yarn add multer
+    yarn add stripe
+
+    // Types Safety for devDeps :
     yarn add @types/multer -D
+    yarn add @types/jsonwebtoken -D
+    yarn add @types/express -D
+    yarn add @types/cors -D
+    yarn add @types/node -D
 
-
-//  Kill Port If Needed
+//  Kill Port If Needed :
     In webstorm powershell terminal:
 
     cmd: netstat -ano | findstr :<PORT>
