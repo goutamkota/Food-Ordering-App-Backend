@@ -10,6 +10,7 @@
     yarn add cloudinary
     yarn add multer
     yarn add stripe
+    yarn add concurrently
 
     // Types Safety for devDeps :
     yarn add @types/multer -D
