@@ -6,19 +6,19 @@ const STRIPE = new Stripe(process.env.STRIPE_API_KEY as string);
 const FRONTEND_URL = process.env.FRONTEND_URL as string;
 
 type CheckoutSessionRequest = {
-    cartItems : {
-        menuItemId : string;
-        name : string;
-        quantity : string;
+    cartItems: {
+        menuItemId: string;
+        name: string;
+        quantity: string;
     }[];
-    deliveryDetails : {
-        email : string;
-        name : string;
-        address : string;
-        city : string;
-    }
-    restaurantId : string;
-}
+    deliveryDetails: {
+        email: string;
+        name: string;
+        addressLine1: string;
+        city: string;
+    };
+    restaurantId: string;
+};
 
 const createCheckoutSession = async (req : express.Request, res : express.Response) => {
     try {
@@ -30,7 +30,7 @@ const createCheckoutSession = async (req : express.Request, res : express.Respon
         if (!session.url) return res.status(500).json({ message : "Error creating stripe session." });
         res.json({url: session.url});
     } catch (error : any) {
-        console.log(error);
+        console.log(error, "stripe checkout");
         res.status(500).json({ message : error.message || error.raw.message });
     }
 }
@@ -43,8 +43,8 @@ const createLineItems = (checkoutSessionRequest : CheckoutSessionRequest, menuIt
         if (!menuItem) throw new Error(`Menu item not found: ${cartItem.menuItemId}.`);
         const line_item : Stripe.Checkout.SessionCreateParams.LineItem = {
             price_data : {
-                currency : "usd",
-                unit_amount : menuItem.price,
+                currency : "inr",
+                unit_amount : menuItem.price * 100,
                 product_data : {
                     name : menuItem.name,
                 }
@@ -64,8 +64,8 @@ const createSession = async (lineItems : Stripe.Checkout.SessionCreateParams.Lin
                     display_name : "Delivery",
                     type : "fixed_amount",
                     fixed_amount : {
-                        amount : deliveryPrice,
-                        currency : "usd"
+                        amount : deliveryPrice * 100,
+                        currency : "inr"
                     }
                 }
             },
