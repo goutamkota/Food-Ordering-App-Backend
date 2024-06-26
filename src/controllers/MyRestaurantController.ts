@@ -1,7 +1,22 @@
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import Restaurant from "../models/restaurant";
+import Order from "../models/order";
 import cloudinary from "cloudinary";
 import mongoose from "mongoose";
+
+const getMyRestaurantOrders = async (req : Request, res : Response) => {
+    try {
+        const restaurant = await Restaurant.findOne({ user : req.userId });
+        if (!restaurant) return res.status(404).json({ message : "Restaurant not found" });
+        const orders = await Order.find({ restaurant : restaurant._id })
+            .populate("restaurant")
+            .populate("user");
+        res.json(orders);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message : "Something went wrong" });
+    }
+}
 
 const getMyRestaurant = async (req : Request, res : Response) => {
     try {
@@ -11,6 +26,23 @@ const getMyRestaurant = async (req : Request, res : Response) => {
     } catch (error) {
         console.log(error);
         res.status(500).json({ message : `Error while fetch current Restaurant` });
+    }
+}
+
+const updateOrderStatus = async (req : express.Request, res : express.Response) => {
+    try {
+        const { orderId } = req.params;
+        const { status } = req.body;
+        const order = await Order.findById(orderId);
+        if (!order) return res.status(404).json({ message : "Order not found" });
+        const restaurant = await Restaurant.findById(order.restaurant);
+        if (!restaurant) return res.status(401).send();
+        order.status = status;
+        await order.save();
+        res.status(200).send(order);
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message : "Unable to update the order status" });
     }
 }
 
@@ -64,5 +96,7 @@ const uploadImage = async (file : Express.Multer.File) => {
 export default {
     createMyRestaurant,
     getMyRestaurant,
-    updateMyRestaurant
+    updateMyRestaurant,
+    getMyRestaurantOrders,
+    updateOrderStatus
 }
